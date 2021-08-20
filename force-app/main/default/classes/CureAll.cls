@@ -9,7 +9,7 @@ public class CureAll {
             zb.RecordTypeId  = '0125e000000Rg6VAAS';
             zb.Data_de_Zumbificacao__c = NULL;
             zb.Tipo_do_Zumbi__c = NULL;
-            
+             
             
         }
         update zombieList;
