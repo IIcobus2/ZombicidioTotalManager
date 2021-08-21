@@ -1,18 +1,13 @@
 ({
-    init: function (cmp) {
-        var items = [];
-        for (var i = 0; i < 500; i++) {
-            var item = {
-                label: i + " Option",
-                value: i.toString()
-            };
-            items.push(item);
-        }
-        cmp.set("v.options", items);
+    init: function (cmp, event, helper) {
+        helper.getBunkers(cmp, event);
     },
+
     handleChange: function (cmp, event) {
-        // This will contain the string of the "value" attribute of the selected option
         var selectedOptionValue = event.getParam("value");
-        alert("Option selected with value: '" + selectedOptionValue + "'");
+        const card2 = document.querySelector("[data-js='campo2']");
+        card2.style.display = "block";
+
+        // cmp.set("v.options", items);
     }
 });

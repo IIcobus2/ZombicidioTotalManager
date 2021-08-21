@@ -14,6 +14,7 @@
             console.log(">>> state:: ", state);
             console.log(">>> errors:: ", errors);
             if (state === "SUCCESS") {
+                console.log("aaaa " + response.getReturnValue());
                 let rows = response.getReturnValue();
 
                 for (var i = 0; i < rows.length; i++) {
