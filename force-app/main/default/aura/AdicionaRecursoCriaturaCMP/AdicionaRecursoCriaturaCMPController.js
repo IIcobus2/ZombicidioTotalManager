@@ -2,13 +2,13 @@
     doInit: function (component, event, helper) {
         helper.getRecursos(component, event);
     },
-    handleChange: function (cmp, event) {
-        // This will contain the string of the "value" attribute of the selected option
+
+    handleChange: function (component, event) {
         var selectedOptionValue = event.getParam("value");
-        //component.set("v.recursoSelecionado", selectedOptionValue);
-        alert("Option selected with value: '" + selectedOptionValue + "'");
+        component.set("v.recursoSelecionado", selectedOptionValue);
     },
+
     salvar: function (component, event, helper) {
-        helper.getRecursos(component, event);
+        helper.adicionaRecurso(component, event);
     }
 });

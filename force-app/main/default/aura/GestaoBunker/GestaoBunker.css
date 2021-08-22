@@ -1,2 +1,15 @@
 .THIS {
 }
+.THIS #campo2-tabela {
+    max-height: 300px;
+}
+.THIS canvas {
+    border: 1px dotted black;
+}
+
+.THIS .chart-container {
+    position: relative;
+    margin: auto;
+    height: 80vh;
+    width: 80vw;
+}

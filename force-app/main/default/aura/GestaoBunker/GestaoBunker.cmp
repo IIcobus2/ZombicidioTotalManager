@@ -1,7 +1,13 @@
 <aura:component controller="GestaoBunkerCMPController" implements="flexipage:availableForAllPageTypes" access="global">
     <aura:attribute name="options" type="List" />
-    <!-- <aura:attribute name="recordId" type="String" /> -->
+
+    <ltng:require scripts="{!$Resource.ChartjS23}" afterScriptsLoaded="{!c.handleChange}" />
+
+    <!-- <aura:attribute name="dadosBunker" type="List" /> -->
     <aura:handler name="init" value="{! this }" action="{! c.init }" />
+
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
 
     <lightning:card title="Gestão de Bunkers">
         <aura:set attribute="actions">
@@ -12,30 +18,26 @@
                 <lightning:combobox
                     name="listaBunker"
                     label="Selecione um Bunker:"
-                    placeholder="selecione um bunker disponível"
+                    placeholder="selecione um bunker"
                     options="{!v.options }"
                     onchange="{!c.handleChange }"
                 />
             </p>
         </div>
-        <div style="display: none" data-js="campo2">
-            <p>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
+        <div data-js="campo2">
+            <br />
+            <div class="chart-container">
+                <canvas id="chart"></canvas>
+            </div>
+            <p class="slds-p-horizontal_small">
+                <div id="campo2-tabela">
+                    <lightning:datatable
+                        keyField="id"
+                        data="{! v.data }"
+                        columns="{! v.columns }"
+                        hideCheckboxColumn="true"
+                    />
+                </div>
             </p>
         </div>
     </lightning:card>
