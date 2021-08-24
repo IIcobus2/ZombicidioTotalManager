@@ -20,7 +20,7 @@ public class GestaoBunkerCMPController {
             List<Bunker__c> dadoBunker = new List<Bunker__c>();
 
             dadoBunker = [
-                SELECT (SELECT Id, Name, RecordTypeId, Defesa_Criatura__c FROM Criaturas__r LIMIT 10)
+                SELECT (SELECT Id, Name, RecordTypeId, Defesa_Criatura__c FROM Criaturas__r)
                 FROM Bunker__c
                 WHERE Id = :recordIdBunker
             ];
@@ -37,7 +37,7 @@ public class GestaoBunkerCMPController {
             List<Bunker__c> retornaDadoGrafico = new List<Bunker__c>();
 
             retornaDadoGrafico = [
-                SELECT Defesa_do_Bunker__c, (SELECT RecordTypeId FROM Criaturas__r)
+                SELECT Id, Name, Defesa_do_Bunker__c, (SELECT RecordTypeId FROM Criaturas__r)
                 FROM Bunker__c
                 WHERE Id = :recordIdBunker
             ];

@@ -83,19 +83,18 @@
         action.setParams({
             recordIdBunker: recordIdBunker
         });
-
+        var chart;
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 let val = response.getReturnValue();
-                var dataset = [];
+                let dataset = [];
                 var countZumbi = 0;
                 var countHumano = 0;
+                var bunkerName = "";
                 for (let i = 0; i < val.length; i++) {
-                    dataset.push(val[i].Defesa_do_Bunker__c);
                     for (let j = 0; j < val[i].Criaturas__r.length; j++) {
                         var row = val[i].Criaturas__r[j];
-                        console.log("row::", row);
                         if (row.RecordTypeId === "0125e000000Rg6VAAS") {
                             // row.RecordTypeId = "Humano";
                             countHumano++;
@@ -104,16 +103,30 @@
                             countZumbi++;
                         }
                     }
-                    dataset.push(countHumano);
-                    dataset.push(countZumbi);
+                    if (recordIdBunker === val[0].Id) {
+                        bunkerName = val[i].Name;
+                        dataset.push(val[i].Defesa_do_Bunker__c);
+                        var populacao = countZumbi + countHumano;
+                        dataset.push(parseFloat((countHumano * 100) / populacao).toFixed(2));
+                        dataset.push(parseFloat((countZumbi * 100) / populacao).toFixed(2));
+                    } else {
+                        console.log(">>>ERROR:: recordIdBunker === val[i].Id" + recordIdBunker === val[i].Id);
+                    }
                 }
-                new Chart(document.getElementById("chart"), {
+                console.log("bunkerName:: ", bunkerName);
+                console.log("dataset:: ", dataset);
+
+                let ctx = document.getElementById("chart").getContext("2d");
+
+                // var body = document.querySelector('[data-js="display-chart"]');
+
+                new Chart(ctx, {
                     type: "horizontalBar",
                     data: {
-                        labels: ["Defesa do Bunker (%)", "Humano", "Zombie"],
+                        labels: ["Defesa do Bunker (%)", "Humano (%)", "Zombie (%)"],
                         datasets: [
                             {
-                                label: "Count of Task",
+                                label: bunkerName,
                                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"],
                                 data: dataset
                             }
@@ -123,7 +136,10 @@
                         scales: {
                             xAxes: [
                                 {
-                                    stacked: true
+                                    type: "linear",
+                                    min: 0,
+                                    max: 100,
+                                    stacked: false
                                 }
                             ],
                             yAxes: [
@@ -131,11 +147,21 @@
                                     stacked: true
                                 }
                             ]
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: "white",
+                                font: {
+                                    weight: "bold"
+                                },
+                                formatter: "a" + "%"
+                            }
                         }
                     }
                 });
             }
         });
+
         $A.enqueueAction(action);
     },
 

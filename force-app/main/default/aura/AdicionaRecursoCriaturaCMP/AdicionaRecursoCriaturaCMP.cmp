@@ -9,7 +9,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <lightning:card variant="Narrow" title="Adiciona Recursos" iconName="custom:custom9">
-        <p class="slds-p-horizontal_small">
+        <p class="slds-var-p-horizontal_small">
             <lightning:combobox
                 name="listaRecursos"
                 label="Selecione um Recurso"

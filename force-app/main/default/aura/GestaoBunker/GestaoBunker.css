@@ -1,15 +1,18 @@
 .THIS {
-}
-.THIS #campo2-tabela {
-    max-height: 300px;
-}
-.THIS canvas {
-    border: 1px dotted black;
+    min-width: 430px;
+    max-width: 100%;
 }
 
-.THIS .chart-container {
+.THIS #campo2-tabela {
+    min-height: 100px;
+}
+/* .THIS canvas {
+    border: 1px dotted black;
+} */
+
+/* .THIS .chart-container {
     position: relative;
     margin: auto;
     height: 80vh;
     width: 80vw;
-}
+} */
