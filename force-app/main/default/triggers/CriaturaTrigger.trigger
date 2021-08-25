@@ -4,9 +4,14 @@ trigger CriaturaTrigger on Criatura__c(after insert, after update, after delete)
 
     for (Criatura__c cr : Trigger.new) {
         Criatura__c nova = cr;
-        Criatura__c antiga = Trigger.oldMap.get(cr.Id);
-        if (cr.Bunker__c != antiga.Bunker__c) {
-            bunkersUpdateMap.put(cr.Bunker__c, new Bunker__c(id = cr.Bunker__c));
+        Criatura__c antiga = Trigger.oldMap.get(nova.Id);
+        if (nova.Bunker__c != antiga.Bunker__c) {
+            if (nova.Bunker != null) {
+                bunkersUpdateMap.put(nova.Bunker__c, new Bunker__c(id = nova.Bunker__c));
+            }
+            if (antiga.Bunker__c != null) {
+                bunkersUpdateMap.put(antiga.Bunker__c, new Bunker__c(id = antiga.Bunker__c));
+            }
         }
     }
     for (Criatura__c cr : Trigger.old) {
@@ -22,6 +27,7 @@ trigger CriaturaTrigger on Criatura__c(after insert, after update, after delete)
         WHERE id IN :bunkersUpdateMap.keySet()
     ];
     for (Bunker__c bk : bkList) {
+        System.debug(bk.Crituras__r);
         bunkersUpdateMap.get(bk.Id).Populacao__c = bk.Criaturas__r.size();
     }
     update bunkersUpdateMap.values();
