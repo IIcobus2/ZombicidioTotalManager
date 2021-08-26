@@ -1,175 +1,150 @@
 ({
-    helperMethod: function () {},
+    carregaBunkers: function (component, event) {
+        let action = component.get("c.recuperaBunkers");
+        component.set("v.showSpinner", true);
 
-    getBunkers: function (cmp, event) {
-        var action = cmp.get("c.recuperaBunkers");
-
-        // action.setParams();
-
-        action.setCallback(this, (response) => {
-            var state = response.getState();
+        action.setCallback(this, function (response) {
+            let state = response.getState();
+            let errors = response.getError();
             if (state === "SUCCESS") {
-                //console.log("From server: " + response.getReturnValue());
-                let rows = response.getReturnValue();
-                for (let i = 0; i < rows.length; i++) {
+                component.set("v.showSpinner", false);
+
+                var rows = response.getReturnValue();
+                for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
                     row.label = row.Name;
                     row.value = row.Id;
                 }
-                console.log("rows ::", rows);
-
-                if (rows) cmp.set("v.options", rows);
-            } else if (state === "ERROR") {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        // log the error passed in to AuraHandledException
-                        console.log("Error message: " + errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                console.log("rows", rows);
+                if (rows != null) {
+                    component.set("v.options", rows);
                 }
             }
         });
         $A.enqueueAction(action);
     },
 
-    getSelectedBunker: function (cmp, recordIdBunker) {
-        var action = cmp.get("c.dadosBunkerSelecionado");
+    carregaCriaturas: function (component, event) {
+        let action = component.get("c.recuperaCriaturas");
+        component.set("v.showSpinner", true);
 
-        action.setParams({
-            recordIdBunker: recordIdBunker
-        });
-        action.setCallback(this, (response) => {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                //console.log("From server: " + response.getReturnValue());
-                let rows = response.getReturnValue();
-                for (let i = 0; i < rows.length; i++) {
-                    var row = rows[i];
-                    for (let j = 0; j < row.Criaturas__r.length; j++) {
-                        var row2 = row.Criaturas__r[j];
-                        row2.nomeCriatura = row2.Name;
-                        if (row2.RecordTypeId === "0125e000000Rg6VAAS") {
-                            row2.tipoCriatura = "Humano";
-                        } else {
-                            row2.tipoCriatura = "Zumbi";
-                        }
-                        row2.defesaCriatura = row2.Defesa_Criatura__c;
-                        // row.verCriatura = botaoVer;
-                        // row.deletarCriatura = botaoDeletar;
-                    }
-                }
-                // console.log("type:: ", typeof row.Criaturas__r, ">>>rows ::", row.Criaturas__r);
-
-                cmp.set("v.data", row.Criaturas__r);
-            } else if (state === "ERROR") {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        // log the error passed in to AuraHandledException
-                        console.log("Error message: " + errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
-                }
-            }
-        });
-        $A.enqueueAction(action);
-    },
-
-    scriptsLoaded: function (cmp, recordIdBunker) {
-        var action = cmp.get("c.dadosGrafico");
-        action.setParams({
-            recordIdBunker: recordIdBunker
-        });
-        var chart;
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            let state = response.getState();
+            let errors = response.getError();
             if (state === "SUCCESS") {
-                let val = response.getReturnValue();
-                let dataset = [];
-                var countZumbi = 0;
-                var countHumano = 0;
-                var bunkerName = "";
-                for (let i = 0; i < val.length; i++) {
-                    for (let j = 0; j < val[i].Criaturas__r.length; j++) {
-                        var row = val[i].Criaturas__r[j];
-                        if (row.RecordTypeId === "0125e000000Rg6VAAS") {
-                            // row.RecordTypeId = "Humano";
-                            countHumano++;
-                        } else {
-                            // row.RecordTypeId = "Zumbi";
-                            countZumbi++;
-                        }
-                    }
-                    if (recordIdBunker === val[0].Id) {
-                        bunkerName = val[i].Name;
-                        dataset.push(val[i].Defesa_do_Bunker__c);
-                        var populacao = countZumbi + countHumano;
-                        dataset.push(parseFloat((countHumano * 100) / populacao).toFixed(2));
-                        dataset.push(parseFloat((countZumbi * 100) / populacao).toFixed(2));
-                    } else {
-                        console.log(">>>ERROR:: recordIdBunker === val[i].Id" + recordIdBunker === val[i].Id);
-                    }
+                component.set("v.showSpinner", false);
+
+                var rows = response.getReturnValue();
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    row.label = row.Name;
+                    row.value = row.Id;
                 }
-                console.log("bunkerName:: ", bunkerName);
-                console.log("dataset:: ", dataset);
-
-                let ctx = document.getElementById("chart").getContext("2d");
-
-                // var body = document.querySelector('[data-js="display-chart"]');
-
-                new Chart(ctx, {
-                    type: "horizontalBar",
-                    data: {
-                        labels: ["Defesa do Bunker (%)", "Humano (%)", "Zombie (%)"],
-                        datasets: [
-                            {
-                                label: bunkerName,
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"],
-                                data: dataset
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [
-                                {
-                                    type: "linear",
-                                    min: 0,
-                                    max: 100,
-                                    stacked: false
-                                }
-                            ],
-                            yAxes: [
-                                {
-                                    stacked: true
-                                }
-                            ]
-                        },
-                        plugins: {
-                            datalabels: {
-                                color: "white",
-                                font: {
-                                    weight: "bold"
-                                },
-                                formatter: "a" + "%"
-                            }
-                        }
-                    }
-                });
+                console.log("rows", rows);
+                if (rows != null) {
+                    component.set("v.optionsCriaturas", rows);
+                }
             }
         });
-
         $A.enqueueAction(action);
     },
 
-    removeCriatura: function (cmp, row) {
-        var rows = cmp.get("v.rawData");
-        var rowIndex = this.getRowIndex(rows, row);
+    setNovoMembro: function (component, event) {
+        let criaturaSelecionada = event.getParam("value");
+        let bunkerSelecionado = component.get("v.bunkerSelecionado");
 
-        rows.splice(rowIndex, 1);
-        this.updateBooks(cmp);
+        let action = component.get("c.setCriaturaNoBunker");
+
+        action.setParams({
+            bunkerSelecionado: criaturaSelecionada,
+            bunkerSelecionado: bunkerSelecionado
+        });
+        // action.setCallback(this, (response){
+        //     let state = response.getState();
+        //     let errors = response.getError();
+        //     if (state === "SUCCESS") {
+        //         component.set("v.showSpinner", false);
+        //         let rows = response.getReturnValue();
+
+        //     }
+        // });
+    },
+
+    setColumns: function (component) {
+        component.set("v.columns", [
+            { label: "Membro", fieldName: "nome", type: "text" },
+            { label: "Tipo de Criatura", fieldName: "tipo", type: "text" },
+            { label: "Defesa", fieldName: "defesa", type: "percent" },
+            {
+                type: "button",
+                typeAttributes: {
+                    label: "Ver Criatura",
+                    name: "View",
+                    title: "Clique aqui para abrir este registro",
+                    disabled: false,
+                    value: "view",
+                    iconPosition: "left"
+                }
+            },
+            {
+                type: "button",
+                typeAttributes: {
+                    label: "Editar/Expulsar",
+                    name: "Edit",
+                    title: "Clique aqui para editar este registro",
+                    disabled: false,
+                    value: "edit",
+                    iconPosition: "left"
+                }
+            }
+        ]);
+    },
+
+    carregaMembros: function (component, event) {
+        let bunkerSelecionado = event.getParam("value");
+        let action = component.get("c.recuperaBunkerMembros");
+        component.set("v.bunkerSelecionado", bunkerSelecionado);
+
+        component.set("v.showSpinner", true);
+
+        action.setParams({
+            bunkerId: bunkerSelecionado
+        });
+
+        action.setCallback(this, function (response) {
+            let state = response.getState();
+            let errors = response.getError();
+            if (state === "SUCCESS") {
+                var bunker = response.getReturnValue();
+
+                console.log(">>> return:: ", bunker);
+                if (bunker != null) {
+                    component.set("v.bunkerInfo", bunker);
+                    if (bunker.membrosDoBunker != null) {
+                        component.set("v.data", bunker.membrosDoBunker);
+                    }
+                }
+                component.set("v.showSpinner", false);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    viewRecord: function (component, event) {
+        var recId = event.getParam("row").sfId;
+        var actionName = event.getParam("action").name;
+        if (actionName == "Edit") {
+            var editRecordEvent = $A.get("e.force:editRecord");
+            editRecordEvent.setParams({
+                recordId: recId
+            });
+            editRecordEvent.fire();
+        } else if (actionName == "View") {
+            var viewRecordEvent = $A.get("e.force:navigateToURL");
+            viewRecordEvent.setParams({
+                url: "/" + recId
+            });
+            viewRecordEvent.fire();
+        }
     }
 });
