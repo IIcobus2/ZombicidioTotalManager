@@ -15,6 +15,9 @@
     <aura:attribute name="bunkerInfo" type="Object" />
     <aura:attribute name="bunkerSelecionado" type="String" />
 
+    <!-- Variavel com informações da criatura selecionada -->
+    <aura:attribute name="criaturaSelecionada" type="String" />
+
     <!-- Variaveis do Datatable -->
     <aura:attribute name="data" type="Object" />
     <aura:attribute name="columns" type="List" />
@@ -201,23 +204,27 @@
                     </h2>
                 </header>
 
-                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div
+                    class="slds-modal__content slds-p-around_medium"
+                    id="modal-content-id-1"
+                    style="overflow: visible !important"
+                >
                     <lightning:card iconName="standard:lead" title="Criaturas">
-                        <p class="slds-p-horizontal_small">
-                            <lightning:combobox
-                                name="progress2"
-                                label="Criaturas"
-                                placeholder="Selecione uma criatura"
-                                options="{! v.optionsCriaturas }"
-                                onchange="{! c.handleChange2 }"
-                            />
-                        </p>
-                        <lightning:button
-                            variant="success"
-                            label="Incluir"
-                            title="Incluir Membro Selecionado"
-                            onclick="{! c.setNovoMembro }"
+                        <lightning:combobox
+                            name="progress2"
+                            label="Criaturas"
+                            placeholder="Selecione uma criatura"
+                            options="{! v.optionsCriaturas }"
+                            onchange="{! c.handleChange2 }"
                         />
+                        <aura:set attribute="actions">
+                            <lightning:button
+                                variant="success"
+                                label="Incluir"
+                                title="Incluir Membro Selecionado"
+                                onclick="{! c.handleClick }"
+                            />
+                        </aura:set>
                     </lightning:card>
                 </div>
             </div>

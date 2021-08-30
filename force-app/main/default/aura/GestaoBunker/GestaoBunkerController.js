@@ -6,19 +6,22 @@
     },
 
     handleChange: function (component, event, helper) {
-        helper.carregaMembros(component, event);
+        helper.selecionarBunker(component, event);
     },
     handleChange2: function (component, event, helper) {
-        helper.setNovoMembro(component, event);
+        let selectedCreature = event.getParam("value");
+        component.set("v.criaturaSelecionada", selectedCreature);
     },
-
-    viewRecord: function (component, event, helper) {
-        helper.viewRecord(component, event);
+    handleClick: function (component, event, helper) {
+        let selectedCreature = component.get("v.criaturaSelecionada");
+        helper.setNovoMembro(component, event, selectedCreature);
     },
-
     showModal: function (component, event, helper) {
         component.set("v.showModal", true);
         helper.carregaCriaturas(component, event);
+    },
+    viewRecord: function (component, event, helper) {
+        helper.viewRecord(component, event);
     },
 
     closeModal: function (component, event, helper) {

@@ -6,7 +6,7 @@ public class GestaoBunkerCMPController {
 
     @AuraEnabled
     public static List<Criatura__c> recuperaCriaturas() {
-        return [SELECT Id, Name FROM Criatura__c LIMIT 200];
+        return [SELECT Id, Name FROM Criatura__c WHERE Bunker__c = NULL LIMIT 200];
     }
 
     @AuraEnabled
@@ -86,21 +86,19 @@ public class GestaoBunkerCMPController {
         return membros;
     }
 
-    private static void setCriaturaNoBunker(Criatura__c recordIdCriatura, Bunker__c recordIdBunker) {
-        Criatura__c cri = [
-            SELECT Id, Name, RecordTypeId, Defesa_Criatura__c
-            FROM Criatura__c
-            WHERE id = :recordIdCriatura
-        ];
+    @AuraEnabled
+    public static void setCriaturaNoBunker(Id recordIdCriatura, Id recordIdBunker) {
+        try {
+            Criatura__c cri = new Criatura__c();
 
-        MembroDoBunker membro;
+            cri.id = recordIdCriatura;
+            cri.bunker__c = recordIdBunker;
 
-        membro.sfId = cri.Id;
-        membro.nome = cri.Name;
-        membro.defesa = cri.Defesa_Criatura__c;
-        membro.tipo = cri.RecordTypeId;
-
-        System.debug(membro);
+            update cri;
+        } catch (Exception e) {
+            System.debug(e);
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     private static Decimal calculaDefesaCriatura(List<Recurso_da_Criatura__c> recursosCriatura) {
