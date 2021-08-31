@@ -6,7 +6,12 @@ public class GestaoBunkerCMPController {
 
     @AuraEnabled
     public static List<Criatura__c> recuperaCriaturas() {
-        return [SELECT Id, Name FROM Criatura__c WHERE Bunker__c = NULL LIMIT 200];
+        return [
+            SELECT Id, Name
+            FROM Criatura__c
+            WHERE Bunker__c = NULL AND RecordTypeId = '0125e000000Rg6VAAS'
+            LIMIT 200
+        ];
     }
 
     @AuraEnabled

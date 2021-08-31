@@ -105,7 +105,7 @@
             {
                 type: "button",
                 typeAttributes: {
-                    label: "Editar/Expulsar",
+                    label: "Editar",
                     name: "Edit",
                     title: "Clique aqui para editar este registro",
                     disabled: false,
