@@ -16,7 +16,7 @@ public class CriaturaTriggerHandler extends TriggerHandler {
     public override void afterDelete() {
         this.AtualizaPopulacaoBunker(
             Trigger.operationType,
-            new List<Criatura__c>(),
+            (List<Criatura__c>) Trigger.old,
             (Map<Id, Criatura__c>) Trigger.oldMap
         );
     }
@@ -27,6 +27,7 @@ public class CriaturaTriggerHandler extends TriggerHandler {
         Map<Id, Criatura__c> triggerOldMap
     ) {
         Map<id, Bunker__c> bunkersUpdateMap = new Map<id, Bunker__c>();
+
         for (Criatura__c cr : triggerNew) {
             Criatura__c crOld = triggerOldMap.get(cr.id);
             AdicionaBunkerParaAtualizacao(opType, cr, crOld, bunkersUpdateMap);

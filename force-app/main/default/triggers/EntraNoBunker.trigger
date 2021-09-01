@@ -6,7 +6,11 @@ trigger EntraNoBunker on Criatura__c(after insert, after update) {
     Map<id, Criatura__c> MapaCriaturasAntigas = Trigger.oldMap;
 
     for (Criatura__c cr : NovasCriaturas) {
-        if ((cr.bunker__c != null) && (cr.bunker__c != Trigger.oldMap.get(cr.id).bunker__c)) {
+        if (MapaCriaturasAntigas != null) {
+            if ((cr.bunker__c != null) && (cr.bunker__c != Trigger.oldMap.get(cr.id).bunker__c)) {
+                CriaturasBunker.add(cr);
+            }
+        } else {
             CriaturasBunker.add(cr);
         }
     }
