@@ -46,6 +46,7 @@ public class CalloutToSalesforce {
 
     public static ResponseHerois getHeroisBootcamp3() {
         final String endpoint = '/services/apexrest/marvel/availableheroes';
+        ResponseHerois responseHerois = null;
         try {
             getAuth();
             if (!String.isBlank(access_token)) {
@@ -57,27 +58,47 @@ public class CalloutToSalesforce {
                 req.setEndpoint(instance_url + endpoint);
 
                 HttpResponse response = Http.send(req);
+                responseHerois = (ResponseHerois) JSON.deserialize(response.getBody(), ResponseHerois.class);
 
-                System.debug('>>> RESPONSE:: ' + response.getBody());
+                for (Heroi rh : responseHerois.herois) {
+                    System.debug(rh.herois);
+                }
             }
         } catch (Exception e) {
             System.debug('Error:: ' + e.getMessage());
         }
+        return responseHerois;
     }
 
     public class ResponseHerois {
         public List<Heroi> herois;
         public Integer total;
+
+        public ResponseHerois(List<Heroi> herois, Integer total) {
+            this.herois = herois;
+            this.total = total;
+        }
     }
 
     public class Heroi {
         public String nome;
         public String nivel;
         public List<Habilidade> habilidades;
+
+        public Heroi(String nome, String nivel, List<Habilidade> habilidades) {
+            this.nome = nome;
+            this.nivel = nivel;
+            this.habilidades = habilidades;
+        }
     }
 
     public class Habilidade {
         public String nome;
         public String nivel;
+
+        public Habilidade(String nome, String nivel) {
+            this.nome = nome;
+            this.nivel = nivel;
+        }
     }
 }
