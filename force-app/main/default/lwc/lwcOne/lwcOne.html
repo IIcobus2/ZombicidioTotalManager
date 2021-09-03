@@ -1,21 +1,11 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <lightning-card variant="Narrow" title="Hello" icon-name="standard:account">
-        <lightning-button-icon
-            icon-name="utility:down"
-            variant="border-filled"
-            alternative-text="Show More"
-            slot="actions"
-        ></lightning-button-icon>
+        <lightning-button-icon icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>
         <template if:true={bunker.data}>
             <p class="slds-p-horizontal_small">{recordId} {name}</p>
         </template>
-        <lightning-input
-            name="input-01"
-            label="Digite alguma coisa"
-            value={something}
-            onchange={changeHandler}
-        ></lightning-input>
+        <lightning-input name="input-01" label="Digite alguma coisa" value={something} onchange={changeHandler}></lightning-input>
         <p slot="footer">Card Footer</p>
     </lightning-card>
 </template>

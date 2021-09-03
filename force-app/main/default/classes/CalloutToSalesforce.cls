@@ -16,17 +16,7 @@ public class CalloutToSalesforce {
             req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
             req.setMethod('POST');
             req.setEndpoint(url);
-            req.setBody(
-                'grant_type=password' +
-                +'&client_id=' +
-                clientId +
-                '&client_secret=' +
-                clientSecret +
-                '&username=' +
-                username +
-                '&password=' +
-                password
-            );
+            req.setBody('grant_type=password' + +'&client_id=' + clientId + '&client_secret=' + clientSecret + '&username=' + username + '&password=' + password);
 
             System.debug('>> req:: ' + req.getBody());
             HttpResponse response = http.send(req);
@@ -44,6 +34,7 @@ public class CalloutToSalesforce {
         }
     }
 
+    @AuraEnabled(cacheable=true)
     public static ResponseHerois getHeroisBootcamp3() {
         final String endpoint = '/services/apexrest/marvel/availableheroes';
         ResponseHerois responseHerois = null;
@@ -61,7 +52,7 @@ public class CalloutToSalesforce {
                 responseHerois = (ResponseHerois) JSON.deserialize(response.getBody(), ResponseHerois.class);
 
                 for (Heroi rh : responseHerois.herois) {
-                    System.debug(rh.herois);
+                    rh.totalHabilidades = (rh.habilidades).size();
                 }
             }
         } catch (Exception e) {
@@ -71,19 +62,26 @@ public class CalloutToSalesforce {
     }
 
     public class ResponseHerois {
+        @AuraEnabled
         public List<Heroi> herois;
+        @AuraEnabled
         public Integer total;
 
-        public ResponseHerois(List<Heroi> herois, Integer total) {
+        public ResponseHerois(List<Heroi> herois) {
             this.herois = herois;
-            this.total = total;
+            this.total++;
         }
     }
 
     public class Heroi {
+        @AuraEnabled
         public String nome;
+        @AuraEnabled
         public String nivel;
+        @AuraEnabled
         public List<Habilidade> habilidades;
+        @AuraEnabled
+        public Integer totalHabilidades;
 
         public Heroi(String nome, String nivel, List<Habilidade> habilidades) {
             this.nome = nome;
@@ -93,12 +91,17 @@ public class CalloutToSalesforce {
     }
 
     public class Habilidade {
+        @AuraEnabled
         public String nome;
+        @AuraEnabled
         public String nivel;
+        @AuraEnabled
+        public Integer total;
 
         public Habilidade(String nome, String nivel) {
             this.nome = nome;
             this.nivel = nivel;
+            this.total++;
         }
     }
 }

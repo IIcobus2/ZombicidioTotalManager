@@ -1,0 +1,8 @@
+<template>
+    <lightning-card variant="Narrow" title="Lista de Herois" icon-name="utility:connected_apps">
+        <lightning-button-icon icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>
+        <p class="slds-p-horizontal_small">
+            <c-lwc-child herois-dados={herois}></c-lwc-child>
+        </p>
+    </lightning-card>
+</template>
