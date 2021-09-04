@@ -53,6 +53,7 @@ public class CalloutToSalesforce {
 
                 for (Heroi rh : responseHerois.herois) {
                     rh.totalHabilidades = (rh.habilidades).size();
+                    System.debug(rh);
                 }
             }
         } catch (Exception e) {

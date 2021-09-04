@@ -1,0 +1,19 @@
+<aura:component>
+    <aura:attribute name="nome" type="String" />
+    <aura:attribute name="idade" type="String" />
+
+    <lightning:card iconName="standard:contact" title="Formulário de criação de criatura">
+        <div class="slds-p-around_medium">
+            <lightning:input name="input3" value="{!v.nome}" label="Nome" placeholder="digite seu nome aqui..." />
+            <lightning:input name="input3" value="{!v.idade}" label="Idade" placeholder="digite sua idade aqui" />
+        </div>
+
+        <aura:set attribute="actions">
+            <lightning:button label="Criar Criatura" onClick="{!c.handleSubmit}" />
+        </aura:set>
+    </lightning:card>
+
+    <!-- Chamando lightning -->
+
+    <c:lwcOne></c:lwcOne>
+</aura:component>

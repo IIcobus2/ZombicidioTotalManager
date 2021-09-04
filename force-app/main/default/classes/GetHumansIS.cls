@@ -19,7 +19,7 @@ global class GetHumansIS {
 
         for (Criatura__c cri : criaturasToReturn) {
             Bunker bunker = new Bunker(cri.Bunker__r.Name);
-            Humano hum = new Humano(cri.name, cri.id, String.valueOf(cri.idade__c), bunker);
+            Humano hum = new Humano(cri.name, String.valueOf(cri.idade__c), cri.id, bunker);
 
             humanos.add(hum);
         }
