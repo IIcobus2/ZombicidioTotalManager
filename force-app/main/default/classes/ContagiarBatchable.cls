@@ -6,20 +6,9 @@ global class ContagiarBatchable implements Database.Batchable<SObject> {
 
     public ContagiarBatchable() {
     }
-    // public Iterable start(Database.BatchableContext info) {
-    //     return new CustomAccountIterable();
-    // }
     global Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(
-            [
-                SELECT
-                    id,
-                    Criatura__c.RecordTypeId,
-                    (SELECT id, Acrescimo_de_Defesa__c FROM Recursos_da_Criatura__r),
-                    Bunker__c,
-                    Bunker__r.Defesa_do_Bunker__c
-                FROM Criatura__c
-            ]
+            [SELECT id, Criatura__c.RecordTypeId, (SELECT id, Acrescimo_de_Defesa__c FROM Recursos_da_Criatura__r), Bunker__c, Bunker__r.Defesa_do_Bunker__c FROM Criatura__c]
         );
     }
 
@@ -27,9 +16,8 @@ global class ContagiarBatchable implements Database.Batchable<SObject> {
         System.debug('Entrou no execute');
         List<Criatura__c> criList = (List<Criatura__c>) scope;
         Map<id, Criatura__c> criUpdateList = new Map<id, Criatura__c>();
-        // List<Criatura__c> criUpdateList = new List<Criatura__c>();
-        List<Criatura__c> humList = preencheListaCriaturaRecordtype(HumanoId, criList);
-        List<Criatura__c> zumList = preencheListaCriaturaRecordtype(ZumbiId, criList);
+        List<Criatura__c> humList = preencheListaCriaturaPorRecordtype(HumanoId, criList);
+        List<Criatura__c> zumList = preencheListaCriaturaPorRecordtype(ZumbiId, criList);
         for (Criatura__c zum : zumList) {
             for (integer i = 0; i < ZumbiSpread; i++) {
                 Criatura__c cri = (Criatura__c) Util.GetRandomItem(humList);
@@ -59,7 +47,7 @@ global class ContagiarBatchable implements Database.Batchable<SObject> {
         return defesa;
     }
 
-    private List<Criatura__c> preencheListaCriaturaRecordtype(id recordType, List<Criatura__c> listaP) {
+    private List<Criatura__c> preencheListaCriaturaPorRecordtype(id recordType, List<Criatura__c> listaP) {
         List<Criatura__c> cri = new List<Criatura__c>();
         for (Criatura__c crip : listaP) {
             if (crip.recordTypeId == recordType) {
